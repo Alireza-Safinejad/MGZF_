@@ -1,4 +1,4 @@
-name: your_project_name
+name: MGZF
 description: A new Flutter project
 
 publish_to: 'none'
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # سایر پکیج‌های مورد نیاز
+  device_info_plus: ^8.0.0
 
 flutter:
   assets:
