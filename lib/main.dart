@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => LoginPage()),
+        MaterialPageRoute(builder: (context) => LoginPage()),
       );
     });
   }
@@ -45,14 +45,11 @@ class _SplashScreenState extends State<SplashScreen> {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: Text(
-              'GZ',
-              style: TextStyle(
-                fontSize: 40,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: Text('GZ',
+                style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold)),
           ),
         ),
       ),
@@ -73,8 +70,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _getDeviceId() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    var info = await deviceInfo.androidInfo;
-    _deviceId = info.id;
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      var iosInfo = await deviceInfo.iosInfo;
+      _deviceId = iosInfo.identifierForVendor ?? '';
+    } else {
+      var androidInfo = await deviceInfo.androidInfo;
+      _deviceId = androidInfo.id;
+    }
   }
 
   Future<void> _login() async {
@@ -87,11 +89,11 @@ class _LoginPageState extends State<LoginPage> {
     if (_username == 'admin' && _password == '123') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => ShiftsPage()),
+        MaterialPageRoute(builder: (context) => ShiftsPage()),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('نام کاربری یا رمز اشتباه است')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('نام کاربری یا رمز اشتباه است')));
     }
   }
 
@@ -105,12 +107,12 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              onChanged: (v) => _username = v,
+              onChanged: (value) => _username = value,
               decoration: InputDecoration(labelText: 'نام کاربری'),
             ),
             SizedBox(height: 16),
             TextField(
-              onChanged: (v) => _password = v,
+              onChanged: (value) => _password = value,
               obscureText: true,
               decoration: InputDecoration(labelText: 'رمز عبور'),
             ),
@@ -127,7 +129,7 @@ class ShiftsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('شیفت‌ها')),
+      appBar: AppBar(title: Text('شیفت‌های کارخانه گندله‌سازی')),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -138,26 +140,12 @@ class ShiftsPage extends StatelessWidget {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: ['A', 'B', 'C', 'D']
-                .map(
-                  (s) => Padding(
-                    padding: EdgeInsets.all(8),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ShiftDetailsPage(shift: s),
-                          ),
-                        );
-                      },
-                      child: Text('شیفت $s'),
-                      style:
-                          ElevatedButton.styleFrom(minimumSize: Size(200, 50)),
-                    ),
-                  ),
-                )
-                .toList(),
+            children: [
+              ShiftButton(shift: 'شیفت A'),
+              ShiftButton(shift: 'شیفت B'),
+              ShiftButton(shift: 'شیفت C'),
+              ShiftButton(shift: 'شیفت D'),
+            ],
           ),
         ),
       ),
@@ -165,34 +153,19 @@ class ShiftsPage extends StatelessWidget {
   }
 }
 
-class ShiftDetailsPage extends StatelessWidget {
+class ShiftButton extends StatelessWidget {
   final String shift;
-  ShiftDetailsPage({required this.shift});
 
-  final Map<String, dynamic> mockData = {
-    'آلارم‌ها': 'آلارم سنسور 1',
-    'توقفات': '2 ساعت',
-    'رطوبت': '8%',
-    'FeO': '12%',
-    'بلین': '3500',
-    'تولید/ساعت': '500 تن',
-    'ریجکت': '2.1%',
-  };
+  ShiftButton({required this.shift});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('جزئیات شیفت $shift')),
-      body: ListView(
-        padding: EdgeInsets.all(16),
-        children: mockData.entries
-            .map((e) => Card(
-                  child: ListTile(
-                    title: Text(e.key),
-                    subtitle: Text(e.value.toString()),
-                  ),
-                ))
-            .toList(),
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Text(shift, style: TextStyle(fontSize: 20)),
+        style: ElevatedButton.styleFrom(minimumSize: Size(200, 50)),
       ),
     );
   }
