@@ -1,16 +1,16 @@
-name: MGZF
-description: Factory Monitor App
+name: your_project_name
+description: A new Flutter project
+
 publish_to: 'none'
-version: 1.0.0+1
+
 environment:
-  sdk: ">=2.17.0 <4.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  device_info_plus: ^9.0.0
+  # سایر پکیج‌های مورد نیاز
 
 flutter:
-  uses-material-design: true
   assets:
     - assets/Gz.PNG
