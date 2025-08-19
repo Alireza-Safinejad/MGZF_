@@ -1,32 +1,30 @@
-name: Build Flutter APK
+name: Build APK and Windows
 
 on:
-  workflow_dispatch:   # اجرا دستی از تب Actions
   push:
     branches:
-      - main           # هر بار push روی main اجرا میشه
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Setup Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'   # نسخه پایدار Flutter
+          flutter-version: '3.7.0'
 
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get
+          flutter doctor --android-licenses
 
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Build Windows
+        run: flutter build windows --release
