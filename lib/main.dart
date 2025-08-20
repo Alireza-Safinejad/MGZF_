@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Factory Monitor',
+      title: 'Monitoring of Pelletizing Factory',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: SplashScreen(),
     );
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
           .showSnackBar(SnackBar(content: Text('دستگاه مجاز نیست')));
       return;
     }
-    if (_username == 'admin' && _password == '123') {
+    if (_username == '1670' && _password == '123') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => ShiftsPage()),
